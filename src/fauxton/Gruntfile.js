@@ -154,7 +154,7 @@ module.exports = function(grunt) {
     // index.html.
     concat: {
       requirejs: {
-        src: ["assets/js/libs/almond.js", "dist/debug/templates.js", "dist/debug/require.js"],
+        src: [ "dist/debug/templates.js", "assets/js/libs/require.js"],
         dest: "dist/debug/js/require.js"
       },
 
@@ -326,7 +326,7 @@ module.exports = function(grunt) {
   // Fetch dependencies (from git or local dir), lint them and make load_addons
   grunt.registerTask('dependencies', ['get_deps', 'jshint', 'gen_load_addons:default']);
   // build templates, js and css
-  grunt.registerTask('build', ['jst', 'requirejs', 'concat:requirejs', 'less', 'concat:index_css', 'template']);
+  grunt.registerTask('build', ['jst', 'concat:requirejs', 'less', 'concat:index_css', 'template']);
   // minify code and css, ready for release.
   grunt.registerTask('minify', ['uglify', 'cssmin:compress']);
 

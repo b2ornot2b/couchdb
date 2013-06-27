@@ -23,6 +23,7 @@ module.exports = function (grunt) {
 
     // Options
     var dist_dir = options.dist || './dist/debug/';
+    var app_dir = './app';
     var port = options.port || 8000;
 
     // Proxy options with default localhost
@@ -37,9 +38,19 @@ module.exports = function (grunt) {
     // inform grunt that this task is async
     var done = this.async();
 
-    // serve any javascript or css files from here
-    app.get(/\.css$|\.js$|img/, function (req, res) {
+    // serve any javascript or css files from here assets dir
+    app.get(/assets/, function (req, res) {
+      res.sendfile(path.join('./',req.url));
+    });
+    
+    // serve any javascript or css files from dist debug dir
+    app.get(/\.css$|\/js\/|img/, function (req, res) {
       res.sendfile(path.join(dist_dir,req.url));
+    });
+
+    app.get(/\.js$/, function (req, res) {
+      console.log('js', req.url);
+      res.sendfile(path.join(app_dir,req.url));
     });
 
     // create proxy to couch for all couch requests
