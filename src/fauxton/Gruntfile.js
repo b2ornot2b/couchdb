@@ -154,7 +154,8 @@ module.exports = function(grunt) {
     // index.html.
     concat: {
       requirejs: {
-        src: [ "dist/debug/templates.js", "assets/js/libs/require.js"],
+       // src: [ "dist/debug/templates.js", "assets/js/libs/require.js"],
+        src: [ "assets/js/libs/require.js"],
         dest: "dist/debug/js/require.js"
       },
 
@@ -207,7 +208,7 @@ module.exports = function(grunt) {
 
     watch: {
       files: './app/**/*',
-      tasks: ['debug', 'template']
+      tasks: ['watchRun']
     },
 
     requirejs: {
@@ -225,8 +226,10 @@ module.exports = function(grunt) {
 
           // Do not wrap everything in an IIFE.
           wrap: false,
-          optimize: "none"
-      }
+          optimize: "none",
+          excludeShallow: ['css/css-builder', 'less/lessc-server', 'less/lessc'],
+          include: ['css']
+        }
       }
     },
 
@@ -302,11 +305,23 @@ module.exports = function(grunt) {
   // Load the couchapp task
   grunt.loadNpmTasks('grunt-couchapp');
   // Load the copy task
-  grunt.loadNpmTasks('grunt-contrib');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   // Load the exec task
   grunt.loadNpmTasks('grunt-exec');
   // Load Require.js task
   grunt.loadNpmTasks('grunt-requirejs');
+  // Load Copy task
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  // Load Clean task
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  // Load jshint task
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  // Load jst task
+  grunt.loadNpmTasks('grunt-contrib-jst');
+  // Load less task
+  grunt.loadNpmTasks('grunt-contrib-less');
+  // Load concat task
+  grunt.loadNpmTasks('grunt-contrib-concat');
   // Load UglifyJS task
   grunt.loadNpmTasks('grunt-contrib-uglify');
   // Load CSSMin task
@@ -336,7 +351,9 @@ module.exports = function(grunt) {
   // dev server
   grunt.registerTask('dev', ['debug', 'couchserver']);
   // build a debug release
-  grunt.registerTask('debug', ['test', 'dependencies', 'build', 'copy:debug']);
+  grunt.registerTask('debug', ['test', 'dependencies', 'concat:requirejs','less', 'concat:index_css', 'template', 'copy:debug']);
+  //grunt.registerTask('watchRun', ['jshint', 'dependencies', 'less', 'concat:index_css' ]);
+  grunt.registerTask('watchRun', ['jshint', 'dependencies' ]);
   // build a release
   grunt.registerTask('release', ['test' ,'dependencies', 'build', 'minify', 'copy:dist']);
 

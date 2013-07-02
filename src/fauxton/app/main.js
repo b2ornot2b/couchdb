@@ -1,4 +1,5 @@
 require([
+  'css!/css/index',
   // Application.
   "app",
 
@@ -6,7 +7,7 @@ require([
   "router"
 ],
 
-function(app, Router) {
+function(indexCSS, app, Router) {
 
   // Define your master router on the application namespace and trigger all
   // navigation from this instance.

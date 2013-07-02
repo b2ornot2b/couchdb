@@ -52,10 +52,11 @@ module.exports = function (grunt) {
       } else if (!!url.match(/\.css$|\/js\/|img/)) {
         // serve any javascript or css files from dist debug dir
         filePath = path.join(dist_dir,req.url);
+        console.log('css', url, filePath);
       } else if (!!url.match(/\.js$|\.html$/)) {
         // server js from app directory
-        console.log('js', req.url);
         filePath = path.join(app_dir,req.url.replace('/_utils/fauxton/app',''));
+        console.log('less', url, filePath);
       } else if (url === '/' && accept[0] !== 'application/json') {
         // serve main index file from here
         filePath = path.join(dist_dir, 'index.html');
@@ -73,7 +74,7 @@ module.exports = function (grunt) {
       return false;
     }
 
-    var watch = grunt.util.spawn({cmd: 'bbb', grunt: true, args: ['watch']}, function (error, result, code) {/* log.writeln(String(result));*/ });
+    var watch = grunt.util.spawn({cmd: 'grunt', grunt: true, args: ['watch']}, function (error, result, code) {/* log.writeln(String(result));*/ });
 
     watch.stdout.pipe(process.stdout);
     watch.stderr.pipe(process.stderr);

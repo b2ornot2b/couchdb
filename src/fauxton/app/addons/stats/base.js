@@ -13,7 +13,8 @@
 define([
   "app",
   "api",
-  "addons/stats/routes"
+  "addons/stats/routes",
+  'less!/app/addons/stats/assets/less/stats'
 ],
 
 function(app, FauxtonAPI, Stats) {

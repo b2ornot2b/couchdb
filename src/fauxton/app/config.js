@@ -50,6 +50,25 @@ require.config({
     "plugins/prettify": [],
 
     "plugins/jquery.form": ["jquery"]
+  },
+
+  /*map: {
+    '*': {
+      'css': '../assets/js/plugins/require-css/css'
+    }
+  },*/
+
+  packages: [
+  {
+    name: 'css',
+    location: '../assets/js/plugins/require-css',
+    main: 'css'
+  },
+  {
+    name: 'less',
+    location: '../assets/js/plugins/require-less',
+    main: 'less'
   }
+]
 
 });

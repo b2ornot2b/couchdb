@@ -24,7 +24,6 @@
   <title>Project Fauxton</title>
 
   <!-- Application styles. -->
-  <link rel="stylesheet" href="<%= assets_root %>css/index.css">
   <style type="text/css">
     body {
     padding-top: 60px;
