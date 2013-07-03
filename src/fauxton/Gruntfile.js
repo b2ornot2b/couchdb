@@ -84,16 +84,28 @@ module.exports = function(grunt) {
 
   var templateSettings = function(){
     var defaultSettings = {
-      "src": "assets/index.underscore",
-      "dest": "dist/debug/index.html",
-      "variables": {
-        "assets_root": "./",
-        "requirejs": "require.js",
-        "base": null
+      "develpment": {
+        "src": "assets/index.underscore",
+        "dest": "dist/debug/index.html",
+        "variables": {
+          "assets_root": "/assets/",
+          "requirejs": "libs/require.js",
+          "base": null
+        }
+      },
+      "release": {
+        "src": "assets/index.underscore",
+        "dest": "dist/debug/index.html",
+        "variables": {
+          "assets_root": "./",
+          "requirejs": "require.js",
+          "base": null
+        }
       }
     };
+
     var settings = helper.readSettingsFile();
-    return {template: settings.template || defaultSettings};
+    return settings.template || defaultSettings;
   }();
 
   grunt.initConfig({
@@ -154,8 +166,7 @@ module.exports = function(grunt) {
     // index.html.
     concat: {
       requirejs: {
-       // src: [ "dist/debug/templates.js", "assets/js/libs/require.js"],
-        src: [ "assets/js/libs/require.js"],
+        src: [ "dist/debug/templates.js", "assets/js/libs/require.js"],
         dest: "dist/debug/js/require.js"
       },
 
@@ -207,8 +218,11 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      files: './app/**/*',
-      tasks: ['watchRun']
+      files: ['./app/**/*', '!./app/load_addons.js'],
+      tasks: ['watchRun'],
+      options: {
+        nospawn: true,
+      }
     },
 
     requirejs: {
@@ -297,6 +311,13 @@ module.exports = function(grunt) {
 
   });
 
+  // on watch events configure jshint:all to only run on changed file
+  grunt.event.on('watch', function(action, filepath) {
+    if (!!filepath.match(/.js$/)) {
+      grunt.config(['jshint', 'all'], filepath);
+    }
+  });
+
   /*
    * Load Grunt plugins
    */
@@ -341,7 +362,7 @@ module.exports = function(grunt) {
   // Fetch dependencies (from git or local dir), lint them and make load_addons
   grunt.registerTask('dependencies', ['get_deps', 'jshint', 'gen_load_addons:default']);
   // build templates, js and css
-  grunt.registerTask('build', ['jst', 'concat:requirejs', 'less', 'concat:index_css', 'template']);
+  grunt.registerTask('build', ['less', 'concat:index_css', 'jst', 'requirejs', 'concat:requirejs', 'template:release']);
   // minify code and css, ready for release.
   grunt.registerTask('minify', ['uglify', 'cssmin:compress']);
 
@@ -349,9 +370,10 @@ module.exports = function(grunt) {
    * Build the app in either dev, debug, or release mode
    */
   // dev server
-  grunt.registerTask('dev', ['debug', 'couchserver']);
+  grunt.registerTask('dev', ['debugDev', 'couchserver']);
   // build a debug release
-  grunt.registerTask('debug', ['test', 'dependencies', 'concat:requirejs','less', 'concat:index_css', 'template', 'copy:debug']);
+  grunt.registerTask('debug', ['test', 'dependencies', 'concat:requirejs','less', 'concat:index_css', 'template:development', 'copy:debug']);
+  grunt.registerTask('debugDev', ['test', 'dependencies', 'less', 'concat:index_css', 'template', 'copy:debug']);
   //grunt.registerTask('watchRun', ['jshint', 'dependencies', 'less', 'concat:index_css' ]);
   grunt.registerTask('watchRun', ['jshint', 'dependencies' ]);
   // build a release

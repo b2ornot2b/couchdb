@@ -52,11 +52,9 @@ module.exports = function (grunt) {
       } else if (!!url.match(/\.css$|\/js\/|img/)) {
         // serve any javascript or css files from dist debug dir
         filePath = path.join(dist_dir,req.url);
-        console.log('css', url, filePath);
       } else if (!!url.match(/\.js$|\.html$/)) {
         // server js from app directory
         filePath = path.join(app_dir,req.url.replace('/_utils/fauxton/app',''));
-        console.log('less', url, filePath);
       } else if (url === '/' && accept[0] !== 'application/json') {
         // serve main index file from here
         filePath = path.join(dist_dir, 'index.html');
